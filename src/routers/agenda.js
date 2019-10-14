@@ -28,7 +28,8 @@ router.get('/agenda/:id', async (req, res) => {
     const _id = req.params.id
 
     try{
-        const agenda = await Agenda.findById(_id)
+        const agenda = await Agenda.findById(_id).populate({ path: 'pracas' }).execPopulate()
+        //.populate({ path: 'pracas' }).execPopulate()
 
         if(!agenda){
             return res.status(404).send()
