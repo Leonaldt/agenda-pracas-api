@@ -17,7 +17,7 @@ router.post('/agenda', async (req, res) => {
 router.get('/agenda', async (req, res) => {
 
     try{
-        const agendas = await Agenda.find().populate('pracas').execPopulate()
+        const agendas = await Agenda.find()
         res.send(agendas)
     }catch(e){
         res.status(500).send()
@@ -28,7 +28,7 @@ router.get('/agenda/:id', async (req, res) => {
     const _id = req.params.id
 
     try{
-        const agenda = await Agenda.findById(_id).populate('pracas').execPopulate()
+        const agenda = await Agenda.findById(_id)
 
         if(!agenda){
             return res.status(404).send()
