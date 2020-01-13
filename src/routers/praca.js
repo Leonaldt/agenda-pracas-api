@@ -62,7 +62,7 @@ router.get('/pracas/:id', async (req, res) => {
 
 router.patch('/pracas/:id', async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['nome', 'endereco', 'locais']
+    const allowedUpdates = ['_id', 'nome', 'endereco', 'locais']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
 
     if (!isValidOperation) {
