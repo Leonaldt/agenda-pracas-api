@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 require('./db/mongoose')
 const userRouter = require('./routers/user')
 const pracaRouter = require('./routers/praca')
@@ -7,7 +8,7 @@ const agendaRouter = require('./routers/agenda')
 const app = express()
 const port = process.env.PORT
 
-var allowedOrigins = ['http://localhost:4200', 'https://agenda-pracas.herokuapp.com/'];
+var allowedOrigins = ['http://localhost:4200', 'https://agenda-pracas.herokuapp.com'];
 
 app.use(express.json())
 app.use(userRouter)
