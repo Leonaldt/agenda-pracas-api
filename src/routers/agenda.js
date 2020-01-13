@@ -3,7 +3,7 @@ const Agenda = require('../models/agenda')
 const auth = require('../middleware/auth')
 const router = new express.Router()
 
-app.use(function (req, res, next) {
+router.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
