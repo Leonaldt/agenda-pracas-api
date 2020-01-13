@@ -62,7 +62,7 @@ router.get('/agenda/:id', async (req, res) => {
 
 router.patch('/agenda/:id', async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['data_hora', 'interessado', 'telefone', 'evento', 'situacao', 'documento', 'data_protocolo', 'publico', 'obs', 'local', 'local_evento']
+    const allowedUpdates = ['_id', 'data_hora', 'interessado', 'telefone', 'evento', 'situacao', 'documento', 'data_protocolo', 'publico', 'obs', 'local', 'local_evento']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
 
     if (!isValidOperation) {
