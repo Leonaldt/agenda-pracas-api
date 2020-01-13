@@ -7,7 +7,7 @@ const router = new express.Router()
 router.use(function (req, res, next) {
 
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200', 'https://agenda-pracas.herokuapp.com');
+    res.setHeader('Access-Control-Allow-Origin', 'https://agenda-pracas.herokuapp.com');
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
