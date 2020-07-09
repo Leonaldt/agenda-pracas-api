@@ -8,12 +8,9 @@ const cors = require('cors')
 const app = express()
 const port = process.env.PORT
 
-const corsOptions = {
-    origin: '*',
-    optionsSuccessStatus: 200
-}
-
-app.use(cors(corsOptions))
+app.use(cors({
+    origin: 'https://agenda-pracas-app.herokuapp.com'
+}));
 
 app.use(express.json())
 app.use(userRouter)
