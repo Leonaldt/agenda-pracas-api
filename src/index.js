@@ -2,26 +2,30 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 
-// require('./db/mongoose')
-// const userRouter = require('./routers/user')
-// const pracaRouter = require('./routers/praca')
-// const agendaRouter = require('./routers/agenda')
+require('./db/mongoose')
+const userRouter = require('./routers/user')
+const pracaRouter = require('./routers/praca')
+const agendaRouter = require('./routers/agenda')
 
-// const port = process.env.PORT
+const port = process.env.PORT
 
-app.use((req, res, next) => {
-    //Qual site tem permissão de realizar a conexão, no exemplo abaixo está o "*" indicando que qualquer site pode fazer a conexão
-    res.header("Access-Control-Allow-Origin", "*");
-    //Quais são os métodos que a conexão pode realizar na API
-    res.header("Access-Control-Allow-Methods", 'GET,PUT,POST,DELETE');
-    app.use(cors());
-    next();
-});
+var whitelist = ['http://localhost:4200', 'https://agenda-pracas-app.herokuapp.com']
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+
+app.use(cors(corsOptions))
 
 app.use(express.json())
-// app.use(userRouter)
-// app.use(pracaRouter)
-// app.use(agendaRouter)
+app.use(userRouter)
+app.use(pracaRouter)
+app.use(agendaRouter)
 
 app.listen(port, () => {
     console.log('Server is up on port ' + port)
