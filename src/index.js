@@ -7,8 +7,6 @@ const agendaRouter = require('./routers/agenda')
 const app = express()
 const port = process.env.PORT
 
-var allowedOrigins = ['https://agenda-pracas.herokuapp.com'];
-
 app.use(express.json())
 app.use(userRouter)
 app.use(pracaRouter)
