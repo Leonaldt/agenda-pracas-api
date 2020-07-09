@@ -2,12 +2,12 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 
-require('./db/mongoose')
-const userRouter = require('./routers/user')
-const pracaRouter = require('./routers/praca')
-const agendaRouter = require('./routers/agenda')
+// require('./db/mongoose')
+// const userRouter = require('./routers/user')
+// const pracaRouter = require('./routers/praca')
+// const agendaRouter = require('./routers/agenda')
 
-const port = process.env.PORT
+// const port = process.env.PORT
 
 app.use((req, res, next) => {
     //Qual site tem permissão de realizar a conexão, no exemplo abaixo está o "*" indicando que qualquer site pode fazer a conexão
@@ -19,9 +19,9 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json())
-app.use(userRouter)
-app.use(pracaRouter)
-app.use(agendaRouter)
+// app.use(userRouter)
+// app.use(pracaRouter)
+// app.use(agendaRouter)
 
 app.listen(port, () => {
     console.log('Server is up on port ' + port)
