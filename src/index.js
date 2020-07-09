@@ -9,7 +9,7 @@ const app = express()
 const port = process.env.PORT
 
 app.use(cors({
-    origin: 'https://agenda-pracas-app.herokuapp.com'
+    origin: 'http://localhost:4200'
 }));
 
 app.use(express.json())
