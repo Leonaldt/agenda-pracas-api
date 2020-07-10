@@ -16,8 +16,27 @@ router.post('/agenda', async (req, res) => {
 
 router.get('/agenda', async (req, res) => {
 
+    const match = {}
+    const sort = {}
+
+    if (req.query.situacao)
+        match.situacao = req.query.situacao
+
+    if (req.query.sortBy) {
+        const parts = req.query.sortBy.split(':')
+        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
+    }
+
     try {
-        const agendas = await Agenda.find()
+        const agendas = await Agenda.find().populate({
+            path: 'local',
+            match,
+            options: {
+                limit: parseInt(req.query.limit),
+                skip: parseInt(req.query.skip),
+                sort
+            }
+        }).exec()
         res.send(agendas)
     } catch (e) {
         res.status(500).send()
@@ -29,6 +48,7 @@ router.get('/agenda/:id', async (req, res) => {
 
     try {
         const agenda = await Agenda.findById(_id)
+        await agenda.populate('local').execPopulate()
 
         if (!agenda) {
             return res.status(404).send()

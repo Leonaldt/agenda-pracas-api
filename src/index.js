@@ -7,7 +7,7 @@ const userRouter = require('./routers/user')
 const pracaRouter = require('./routers/praca')
 const agendaRouter = require('./routers/agenda')
 
-const port = process.env.PORT
+const port = 3001
 
 var whitelist = ['http://localhost:4200', 'https://agenda-pracas-app.herokuapp.com']
 var corsOptions = {
