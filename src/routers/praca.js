@@ -3,7 +3,7 @@ const Praca = require('../models/praca')
 const auth = require('../middleware/auth')
 const router = new express.Router()
 
-router.post('/pracas', async (req, res) => {
+router.post('/pracas', auth, async (req, res) => {
     const praca = new Praca(req.body)
     console.log(req.body)
     try {
@@ -14,7 +14,7 @@ router.post('/pracas', async (req, res) => {
     }
 })
 
-router.get('/pracas', async (req, res) => {
+router.get('/pracas', auth, async (req, res) => {
 
     try {
         const pracas = await Praca.find({})
@@ -24,7 +24,7 @@ router.get('/pracas', async (req, res) => {
     }
 })
 
-router.get('/pracas/:id', async (req, res) => {
+router.get('/pracas/:id', auth, async (req, res) => {
     const _id = req.params.id
 
     try {
@@ -40,7 +40,7 @@ router.get('/pracas/:id', async (req, res) => {
     }
 })
 
-router.patch('/pracas/:id', async (req, res) => {
+router.patch('/pracas/:id', auth, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['_id', 'nome', 'endereco', 'locais']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -64,7 +64,7 @@ router.patch('/pracas/:id', async (req, res) => {
     }
 })
 
-router.delete('/pracas/:id', async (req, res) => {
+router.delete('/pracas/:id', auth, async (req, res) => {
     try {
         const praca = await Praca.findByIdAndDelete(req.params.id)
 

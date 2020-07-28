@@ -23,7 +23,7 @@ router.post('/users/login', async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
         const token = await user.generateAuthToken()
-        res.send({ user, token })
+        res.send({ token })
     } catch (e) {
         res.status(400).send()
     }
@@ -56,7 +56,17 @@ router.get('/users/me', auth, async (req, res) => {
     res.send(req.user)
 })
 
-router.get('/users/:id', async (req, res) => {
+router.get('/users', auth, async (req, res) => {
+
+    try {
+        const users = await User.find()
+        res.send(users)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
+router.get('/users/:id', auth, async (req, res) => {
     const _id = req.params.id
 
     try {
@@ -100,13 +110,27 @@ router.delete('/users/me', auth, async (req, res) => {
     }
 })
 
+router.delete('/users/:id', auth, async (req, res) => {
+    try {
+        const user = await User.findByIdAndDelete(req.params.id)
+
+        if (!user) {
+            return res.status(404).send()
+        }
+
+        res.send(user)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
 const upload = multer({
     limits: {
-        fileSize: 1000000
+        fileSize: 1000000 // 1 megabyte
     },
     fileFilter(req, file, cb) {
         if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-            return cb(new Error('Please upload a image'))
+            return cb(new Error('Please upload an image'))
         }
 
         cb(undefined, true)

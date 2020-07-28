@@ -9,15 +9,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
-    }, 
+    },
     email: {
         type: String,
         unique: true,
         required: true,
         trim: true,
         lowercase: true,
-        validate(value){
-            if(!validator.isEmail(value)){
+        validate(value) {
+            if (!validator.isEmail(value)) {
                 throw new Error('Email is invalid')
             }
         }
@@ -27,8 +27,8 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 7,
         trim: true,
-        validate(value){
-            if(value.toLowerCase().includes('password')){
+        validate(value) {
+            if (value.toLowerCase().includes('password')) {
                 throw new Error('Password cannot contain "password"')
             }
         }
@@ -36,8 +36,8 @@ const userSchema = new mongoose.Schema({
     age: {
         type: Number,
         default: 0,
-        validate(value){
-            if(value < 0){
+        validate(value) {
+            if (value < 0) {
                 throw new Error('Age must be a positive number')
             }
         }
@@ -68,13 +68,17 @@ userSchema.methods.toJSON = function () {
     delete userObject.password
     delete userObject.tokens
     delete userObject.avatar
+    delete userObject.createdAt
+    delete userObject.updatedAt
+    delete userObject.__v
 
     return userObject
 }
 
 userSchema.methods.generateAuthToken = async function () {
     const user = this
-    const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET)
+    // const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, {expiresIn: '1 day' })
+    const token = jwt.sign({ _id: user._id.toString(), name: user.name, email: user.email }, process.env.JWT_SECRET)
 
     user.tokens = user.tokens.concat({ token })
     await user.save()
@@ -85,13 +89,13 @@ userSchema.methods.generateAuthToken = async function () {
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email })
 
-    if(!user){
+    if (!user) {
         throw new Error('Unable to login')
     }
 
     const isMatch = await bcrypt.compare(password, user.password)
 
-    if(!isMatch){
+    if (!isMatch) {
         throw new Error('Unable to login')
     }
 
@@ -101,8 +105,8 @@ userSchema.statics.findByCredentials = async (email, password) => {
 // Hash the plain text password before saving
 userSchema.pre('save', async function (next) {
     const user = this
-    
-    if(user.isModified('password')){
+
+    if (user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8)
     }
 

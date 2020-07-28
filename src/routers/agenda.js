@@ -3,7 +3,7 @@ const Agenda = require('../models/agenda')
 const auth = require('../middleware/auth')
 const router = new express.Router()
 
-router.post('/agenda', async (req, res) => {
+router.post('/agenda', auth, async (req, res) => {
     const agenda = new Agenda(req.body)
 
     try {
@@ -14,7 +14,7 @@ router.post('/agenda', async (req, res) => {
     }
 })
 
-router.get('/agenda', async (req, res) => {
+router.get('/agenda', auth, async (req, res) => {
 
     const match = {}
     const sort = {}
@@ -43,7 +43,7 @@ router.get('/agenda', async (req, res) => {
     }
 })
 
-router.get('/agenda/:id', async (req, res) => {
+router.get('/agenda/:id', auth, async (req, res) => {
     const _id = req.params.id
 
     try {
@@ -60,7 +60,7 @@ router.get('/agenda/:id', async (req, res) => {
     }
 })
 
-router.patch('/agenda/:id', async (req, res) => {
+router.patch('/agenda/:id', auth, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['_id', 'data_hora', 'interessado', 'telefone', 'evento', 'situacao', 'documento', 'data_protocolo', 'publico', 'obs', 'local', 'local_evento']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -84,7 +84,7 @@ router.patch('/agenda/:id', async (req, res) => {
     }
 })
 
-router.delete('/agenda/:id', async (req, res) => {
+router.delete('/agenda/:id', auth, async (req, res) => {
     try {
         const agenda = await Agenda.findByIdAndDelete(req.params.id)
 
