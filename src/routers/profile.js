@@ -1,10 +1,10 @@
 const express = require('express')
-const Praca = require('../models/praca')
+const Profile = require('../models/profile')
 const auth = require('../middleware/auth')
 const router = new express.Router()
 
-router.post('/pracas', auth, async (req, res) => {
-    const praca = new Praca(req.body)
+router.post('/profiles', auth, async (req, res) => {
+    const praca = new Profile(req.body)
 
     try {
         await praca.save()
@@ -14,21 +14,21 @@ router.post('/pracas', auth, async (req, res) => {
     }
 })
 
-router.get('/pracas', auth, async (req, res) => {
+router.get('/profiles', auth, async (req, res) => {
 
     try {
-        const pracas = await Praca.find({})
-        res.send(pracas)
+        const profiles = await Profile.find({})
+        res.send(profiles)
     } catch (e) {
         res.status(500).send()
     }
 })
 
-router.get('/pracas/:id', auth, async (req, res) => {
+router.get('/profiles/:id', auth, async (req, res) => {
     const _id = req.params.id
 
     try {
-        const praca = await Praca.findById(_id)
+        const praca = await Profile.findById(_id)
 
         if (!praca) {
             return res.status(404).send()
@@ -40,9 +40,9 @@ router.get('/pracas/:id', auth, async (req, res) => {
     }
 })
 
-router.patch('/pracas/:id', auth, async (req, res) => {
+router.patch('/profiles/:id', auth, async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['_id', 'nome', 'endereco', 'locais']
+    const allowedUpdates = ['_id', 'description', 'roles']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
 
     if (!isValidOperation) {
@@ -50,7 +50,7 @@ router.patch('/pracas/:id', auth, async (req, res) => {
     }
 
     try {
-        const praca = await Praca.findById(req.params.id)
+        const praca = await Profile.findById(req.params.id)
 
         if (!praca) {
             return res.status(404).send()
@@ -64,9 +64,9 @@ router.patch('/pracas/:id', auth, async (req, res) => {
     }
 })
 
-router.delete('/pracas/:id', auth, async (req, res) => {
+router.delete('/profiles/:id', auth, async (req, res) => {
     try {
-        const praca = await Praca.findByIdAndDelete(req.params.id)
+        const praca = await Profile.findByIdAndDelete(req.params.id)
 
         if (!praca) {
             return res.status(404).send()

@@ -2,12 +2,12 @@ const sendgridMail = require('@sendgrid/mail')
 
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-const sendWelcomeEmail = (email, name) => {
+const sendWelcomeEmail = (email, name, password) => {
     sendgridMail.send({
         to: email,
         from: 'leonidas.ollima@gmail.com',
-        subject: 'Thanks for joining in!',
-        text: `Welcome to the app, ${name}. Let me know how you get along with the app.`
+        subject: 'Obrigado por se juntar com a gente!',
+        text: `Bem vindo, ${name}. Esta é a sua senha de acesso ao aplicativo: ${password}.`
     })
 }
 

@@ -3,6 +3,7 @@ const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const Task = require('./praca')
+const Profile = require('../models/profile')
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -18,20 +19,20 @@ const userSchema = new mongoose.Schema({
         lowercase: true,
         validate(value) {
             if (!validator.isEmail(value)) {
-                throw new Error('Email is invalid')
+                throw new Error('O email é inválido')
             }
         }
     },
     password: {
         type: String,
-        required: true,
-        minlength: 7,
-        trim: true,
-        validate(value) {
-            if (value.toLowerCase().includes('password')) {
-                throw new Error('Password cannot contain "password"')
-            }
-        }
+        // required: true,
+        // minlength: 7,
+        // trim: true,
+        // validate(value) {
+        //     if (value.toLowerCase().includes('password')) {
+        //         throw new Error('Password cannot contain "password"')
+        //     }
+        // }
     },
     age: {
         type: Number,
@@ -50,16 +51,26 @@ const userSchema = new mongoose.Schema({
     }],
     avatar: {
         type: Buffer
-    }
+    },
+    profiles: [{
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'Profile'
+        },
+        description: {
+            type: String
+        },
+    }]
 }, {
     timestamps: true
 })
 
-userSchema.virtual('tasks', {
-    ref: 'Task',
-    localField: '_id',
-    foreignField: 'owner'
-})
+// userSchema.virtual('tasks', {
+//     ref: 'Task',
+//     localField: '_id',
+//     foreignField: 'owner'
+// })
 
 userSchema.methods.toJSON = function () {
     const user = this
@@ -77,8 +88,16 @@ userSchema.methods.toJSON = function () {
 
 userSchema.methods.generateAuthToken = async function () {
     const user = this
+
+    let roles = []
+
+    for (let i = 0; i < user.profiles.length; i++) {
+        const profile = await Profile.findById(user.profiles[i]._id)
+        roles = roles.concat(profile.roles)
+    }
+
     // const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, {expiresIn: '1 day' })
-    const token = jwt.sign({ _id: user._id.toString(), name: user.name, email: user.email }, process.env.JWT_SECRET)
+    const token = jwt.sign({ _id: user._id.toString(), name: user.name, email: user.email, profiles: user.profiles, roles }, process.env.JWT_SECRET)
 
     user.tokens = user.tokens.concat({ token })
     await user.save()

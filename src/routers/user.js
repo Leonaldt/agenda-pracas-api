@@ -7,13 +7,15 @@ const { sendWelcomeEmail, sendCancelationEmail } = require('../emails/account')
 const router = new express.Router()
 
 router.post('/users', async (req, res) => {
+    const password = Math.random().toString(36).slice(-8);
+    req.body.password = password;
     const user = new User(req.body)
 
     try {
         await user.save()
-        sendWelcomeEmail(user.email, user.name)
-        const token = await user.generateAuthToken()
-        res.status(201).send({ user, token })
+        sendWelcomeEmail(user.email, user.name, password)
+        // const token = await user.generateAuthToken()
+        res.status(201).send({ user })
     } catch (e) {
         res.status(400).send(e)
     }
@@ -82,6 +84,32 @@ router.get('/users/:id', auth, async (req, res) => {
     }
 })
 
+router.patch('/users/:id', auth, async (req, res) => {
+
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['_id', 'name', 'email', 'age', 'profiles']
+    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+
+    if (!isValidOperation) {
+        return res.status(400).send({ error: 'Invalid updates!' })
+    }
+
+    try {
+
+        const user = await User.findById(req.body._id)
+
+        if (!user) {
+            return res.status(404).send()
+        }
+
+        updates.forEach((update) => user[update] = req.body[update])
+        await user.save()
+        res.send(user)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
 router.patch('/users/me', auth, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['name', 'email', 'password', 'age']
@@ -93,6 +121,7 @@ router.patch('/users/me', auth, async (req, res) => {
 
     try {
         updates.forEach((update) => req.user[update] = req.body[update])
+        // const user = await User.findById(req.params.id)
         await req.user.save()
         res.send(req.user)
     } catch (e) {

@@ -6,6 +6,7 @@ const cors = require('cors')
 const userRouter = require('./routers/user')
 const pracaRouter = require('./routers/praca')
 const agendaRouter = require('./routers/agenda')
+const profileRouter = require('./routers/profile')
 
 const app = express()
 const port = process.env.PORT
@@ -27,12 +28,13 @@ var corsOptions = {
   }
 }
 
-// app.use(cors(corsOptions))
+app.use(cors())
 
 app.use(express.json())
 app.use(userRouter)
 app.use(pracaRouter)
 app.use(agendaRouter)
+app.use(profileRouter)
 
 app.listen(port, () => {
   console.log('Server is up on port ' + port)
