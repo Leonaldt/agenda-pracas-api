@@ -7,7 +7,7 @@ const sendWelcomeEmail = (email, name, password) => {
         to: email,
         from: 'zulenilson@gmail.com',
         subject: 'Obrigado por se juntar a nós!',
-        text: `Bem vindo, ${name}.\nEsta é a sua senha de acesso ao sistema de agendamento: ${password}.\nAccesse: ${'https://agenda-pracas-app.herokuapp.com'}`
+        text: `Bem vindo, ${name}.\nEsta é a sua senha de acesso ao sistema de agendamento: ${password}.\nAccesse o link: ${'https://agenda-pracas-app.herokuapp.com'}`
     })
 }
 

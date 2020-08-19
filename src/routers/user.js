@@ -142,11 +142,12 @@ router.delete('/users/me', auth, async (req, res) => {
 router.delete('/users/:id', auth, async (req, res) => {
     try {
         const user = await User.findByIdAndDelete(req.params.id)
-
+        
         if (!user) {
             return res.status(404).send()
         }
-
+        
+        sendCancelationEmail(user.email, user.name)
         res.send(user)
     } catch (e) {
         res.status(500).send()
