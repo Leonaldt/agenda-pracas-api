@@ -28,7 +28,7 @@ var corsOptions = {
   }
 }
 
-app.use(cors())
+app.use(cors(whitelist))
 
 app.use(express.json())
 app.use(userRouter)
