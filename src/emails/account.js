@@ -5,18 +5,18 @@ sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
 const sendWelcomeEmail = (email, name, password) => {
     sendgridMail.send({
         to: email,
-        from: 'leonidas.ollima@gmail.com',
-        subject: 'Obrigado por se juntar com a gente!',
-        text: `Bem vindo, ${name}. Esta é a sua senha de acesso ao aplicativo: ${password}.`
+        from: 'zulenilson@gmail.com',
+        subject: 'Obrigado por se juntar a nós!',
+        text: `Bem vindo, ${name}. Esta é a sua senha de acesso ao sistema de agendamento: ${password}. Accesse: ${'https://agenda-pracas-app.herokuapp.com'}`
     })
 }
 
 const sendCancelationEmail = (email, name) => {
     sendgridMail.send({
         to: email,
-        from: 'leonidas.ollima@gmail.com',
-        subject: 'Sorry to see you go!',
-        text: `Goodbye, ${name}. I hope to see you back sometime soon.`
+        from: 'zulenilson@gmail.com',
+        subject: 'Lamento ver você ir!',
+        text: `Adeus, ${name}. Espero ver você de volta em breve.`
     })
 }
 
