@@ -96,12 +96,17 @@ userSchema.methods.generateAuthToken = async function () {
         roles = roles.concat(profile.roles)
     }
 
-    // const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, {expiresIn: '1 day' })
     const token = jwt.sign({ _id: user._id.toString(), name: user.name, email: user.email, profiles: user.profiles, roles }, process.env.JWT_SECRET)
 
     user.tokens = user.tokens.concat({ token })
     await user.save()
 
+    return token
+}
+
+userSchema.methods.generateAuthTokenRecoveryPassword = async function () {
+    const user = this
+    const token = jwt.sign({ _id: user._id.toString(), name: user.name, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h'})
     return token
 }
 
