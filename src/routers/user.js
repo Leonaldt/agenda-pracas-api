@@ -58,15 +58,16 @@ router.post('/users/recovery-password', async (req, res) => {
 
     try {
         const user = await User.findOne({ email: req.body.email })
-        const token = await user.generateAuthTokenRecoveryPassword()
-
+        
         if (!user) {
             return res.status(404).send()
         }
-
+        
+        const token = await user.generateAuthTokenRecoveryPassword()
         sendRecoveryEmail(user.email, user.name, token)
         res.send(user)
     } catch (e) {
+        console.log(e)
         res.status(500).send()
     }
 
