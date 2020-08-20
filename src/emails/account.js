@@ -20,7 +20,17 @@ const sendCancelationEmail = (email, name) => {
     })
 }
 
+const sendRecoveryEmail = (email, name, token) => {
+    sendgridMail.send({
+        to: email,
+        from: 'zulenilson@gmail.com',
+        subject: 'Recuperação de senha',
+        text: `Olá, ${name}.\nClique no link abaixo para redefinir sua senha.\n${'http://localhost:4200/reset-password/'}${token}?email=${email}`
+    })
+}
+
 module.exports = {
     sendWelcomeEmail,
-    sendCancelationEmail
+    sendCancelationEmail,
+    sendRecoveryEmail
 }

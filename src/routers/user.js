@@ -3,7 +3,7 @@ const multer = require('multer')
 const sharp = require('sharp')
 const User = require('../models/user')
 const auth = require('../middleware/auth')
-const { sendWelcomeEmail, sendCancelationEmail } = require('../emails/account')
+const { sendWelcomeEmail, sendCancelationEmail, sendRecoveryEmail } = require('../emails/account')
 const router = new express.Router()
 
 router.post('/users', async (req, res) => {
@@ -52,6 +52,43 @@ router.post('/users/logoutAll', auth, async (req, res) => {
     } catch (e) {
         res.status(500).send()
     }
+})
+
+router.post('/users/recovery-password', async (req, res) => {
+
+    try {
+        const user = await User.findOne({ email: req.body.email })
+        const token = await user.generateAuthToken()
+
+        if (!user) {
+            return res.status(404).send()
+        }
+
+        sendRecoveryEmail(user.email, user.name, token)
+        res.send(user)
+    } catch (e) {
+        res.status(500).send()
+    }
+
+})
+
+router.patch('/users/reset-password', auth, async (req, res) => {
+
+    try {
+        const user = await User.findOne({ email: req.body.email })
+
+        if (!user) {
+            return res.status(404).send()
+        }
+
+        user.password = req.body.password
+        await user.save()
+        res.send(user)
+    } catch (e) {
+        console.log(e)
+        res.status(500).send()
+    }
+
 })
 
 router.get('/users/me', auth, async (req, res) => {
@@ -142,7 +179,7 @@ router.delete('/users/me', auth, async (req, res) => {
 router.delete('/users/:id', auth, async (req, res) => {
     try {
         const user = await User.findByIdAndDelete(req.params.id)
-        
+
         if (!user) {
             return res.status(404).send()
         }
